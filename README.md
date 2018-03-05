@@ -3,7 +3,7 @@
 
 ## Getting Started
 # Software requirements
-+ [Node](https://nodejs.org/en/) v8.1.2 or higher
-+ [Truffle](http://truffleframework.com/) v4.1.0 (core: 4.1.0)
++ [NodeJS](https://nodejs.org/en/) v8.1.2 or higher
++ [TruffleJS](http://truffleframework.com/) v4.1.0 (core: 4.1.0)
 + [Solidity](http://solidity.readthedocs.io/en/develop/installing-solidity.html) v0.4.19 (solc-js)
-+ [NPM](https://www.npmjs.com/) v5.7.1 or higher
++ [npm](https://www.npmjs.com/) v5.7.1 or higher
