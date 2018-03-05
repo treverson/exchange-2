@@ -1,0 +1,35 @@
+{
+  "name": "exchange",
+  "version": "1.0.0",
+  "description": "A decentralized Ethereum and ERC20 Tokens Exchange",
+  "main": "truffle-config.js",
+  "directories": {
+    "test": "test"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/jotali/exchange.git"
+  },
+  "keywords": [
+    "Ethereum",
+    "Smart",
+    "Contract",
+    "Solidity",
+    "ERC20",
+    "Exchange",
+    "Decentralized"
+  ],
+  "author": "Fodé Diop",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/jotali/exchange/issues"
+  },
+  "homepage": "https://github.com/jotali/exchange#readme",
+  "dependencies": {
+    "dotenv": "^5.0.1",
+    "mocha": "^5.0.1"
+  }
+}
