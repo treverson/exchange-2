@@ -20,6 +20,14 @@ The goal of this flow is optimize for code reviews and cleanliness. The more seg
 
 For a more in-depth Gitflow understanding read here: https://www.atlassian.com/git/tutorials/comparing-workflows/gitflow-workflow
 
+## Contributing
+We intend for this project to be an educational resource: we are excited to share our wins, mistakes, and methodology of Solidity development as we work in the open. Our primary focus is to continue improving the exchange for our users in line with our roadmap.
+
+The best way to submit feedback and report bugs is to open a GitHub issue. Please be sure to include your operating system, version numbers, and steps to reproduce reported bugs. Keep in mind that all participants will be expected to follow our code of conduct.
+
+## Code of Conduct
+We aim to share our knowledge and findings as we work daily to improve our exchange, for the community, in a safe and open space. We work as we live, as kind and considerate human beings who learn and grow from giving and receiving positive, constructive feedback. We reserve the right to delete or ban any behavior violating this base foundation of respect.
+
 # Software requirements
 + [Node.js](https://nodejs.org/en/) v8.1.2 or higher
 + [Truffle.js](http://truffleframework.com/) v4.1.0 (core: 4.1.0)
