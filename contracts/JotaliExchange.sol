@@ -3,7 +3,7 @@ pragma solidity ^0.4.19;
 import "./owned.sol";
 import "./JotaliToken.sol";
 
-contract JotaliExchange is owned{
+contract JotaliExchange is owned {
 
     function JotaliExchange() {
 
@@ -11,15 +11,35 @@ contract JotaliExchange is owned{
 
     // General Structure
     struct Offer {
-
+      uint amount;
+      address who;
     }
 
     struct OrderBook {
+        uint higherPrice;
+        uint lowerPrice;
 
+        mapping (uint => Offer) offers;
+
+        uint offers_key;
+        uint offers_length;
     }
 
     struct Token {
+      address tokenContract;
+      string symbolName;
 
+      mapping (uint => OrderBook) buyBook;
+
+      uint currentBuyprice;
+      uint lowestBuyPrice;
+      uint amountBuyPrice;
+
+      mapping (uint => OrderBook) sellBook;
+
+      uint currentSellPrice;
+      uint highestSellPrice;
+      uint amountSellPrice;
     }
 
     //Support a max of 255 tokens.
