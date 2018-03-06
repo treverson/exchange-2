@@ -1,9 +1,9 @@
 pragma solidity ^0.4.19;
 
-import "./owned.sol";
+import "./Owned.sol";
 import "./JotaliToken.sol";
 
-contract JotaliExchange is owned {
+contract JotaliExchange is Owned {
 
     function JotaliExchange() {
 
@@ -77,7 +77,7 @@ contract JotaliExchange is owned {
       if (index == 0) {
         return false;
       }
-      return true
+      return true;
     }
 
     function getSymbolIndex(string symbolName) internal returns (uint8) {
@@ -91,10 +91,10 @@ contract JotaliExchange is owned {
 
     // String Comparison Function
     function stringsEqual(string storage _a, string memory _b) internal returns (bool) {
-      bytes storage a = bytes(_a)
-      bytes memory b = bytes(_b)
+      bytes storage a = bytes(_a);
+      bytes memory b = bytes(_b);
       if (a.length != b.length)
-        return false
+        return false;
       // @todo unroll the loop
       for (uint i = 0; i < a.length; i ++)
         if (a[i] != b[i])
