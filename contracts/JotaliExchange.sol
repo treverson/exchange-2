@@ -1,9 +1,9 @@
 pragma solidity ^0.4.19;
 
-import "./Owned.sol";
+import "./owned.sol";
 import "./JotaliToken.sol";
 
-contract JotaliExchange is Owned {
+contract JotaliExchange is owned {
 
     function JotaliExchange() {
 
@@ -44,7 +44,7 @@ contract JotaliExchange is Owned {
 
     //Support a max of 255 tokens.
     mapping (uint8 => Token) tokens;
-    uint symbolNameIndex;
+    uint8 symbolNameIndex;
 
     // Balances
     mapping (address => mapping (uint8 => uint)) tokenBalanceForAddress;
