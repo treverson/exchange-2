@@ -1,9 +1,8 @@
 pragma solidity ^0.4.19;
 
-import "./owned.sol";
 import "./JotaliToken.sol";
 
-contract JotaliExchange is owned {
+contract JotaliExchange {
 
     function JotaliExchange() {
 
@@ -65,7 +64,7 @@ contract JotaliExchange is owned {
     }
 
     // Token Management
-    function addToken(string symbolName, address erc20TokenAddress) onlyOwner {
+    function addToken(string symbolName, address erc20TokenAddress) {
       require(!hasToken(symbolName));
       symbolNameIndex++;
       tokens[symbolNameIndex].symbolName = symbolName;

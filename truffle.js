@@ -1,5 +1,5 @@
 require('dotenv').config()
-var HDWalletProvider = require("truffle-hdwallet-provider");
+var HDWalletProvider = require("truffle-hdwallet-provider")
 
 module.exports = {
     solc: {
@@ -16,10 +16,10 @@ module.exports = {
         },
         ropsten: {
             provider: function() {
-                return new HDWalletProvider(process.env.MNEMONIC, process.env.INFURA));
+                return new HDWalletProvider(process.env.MNEMONIC, process.env.INFURA)
             },
-            gas: 4700000,
+            gas: 5000000,
             network_id: 1
         }
     }
-};
+}
