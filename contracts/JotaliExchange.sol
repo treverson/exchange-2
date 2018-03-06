@@ -1,9 +1,8 @@
 pragma solidity ^0.4.19;
 
-import "./Owned.sol";
 import "./JotaliToken.sol";
 
-contract JotaliExchange is Owned {
+contract JotaliExchange {
 
     function JotaliExchange() {
 
@@ -44,7 +43,7 @@ contract JotaliExchange is Owned {
 
     //Support a max of 255 tokens.
     mapping (uint8 => Token) tokens;
-    uint symbolNameIndex;
+    uint8 symbolNameIndex;
 
     // Balances
     mapping (address => mapping (uint8 => uint)) tokenBalanceForAddress;
@@ -65,7 +64,7 @@ contract JotaliExchange is Owned {
     }
 
     // Token Management
-    function addToken(string symbolName, address erc20TokenAddress) onlyOwner {
+    function addToken(string symbolName, address erc20TokenAddress) {
       require(!hasToken(symbolName));
       symbolNameIndex++;
       tokens[symbolNameIndex].symbolName = symbolName;

@@ -31,5 +31,6 @@ We aim to share our knowledge and findings as we work daily to improve our excha
 # Software requirements
 + [Node.js](https://nodejs.org/en/) v8.1.2 or higher
 + [Truffle.js](http://truffleframework.com/) v4.1.0 (core: 4.1.0)
++ [Ganache](http://truffleframework.com/ganache/) v1.0.1 or higher
 + [Solidity](http://solidity.readthedocs.io/en/develop/installing-solidity.html) v0.4.19 (solc-js)
 + [npm](https://www.npmjs.com/) v5.7.1 or higher
