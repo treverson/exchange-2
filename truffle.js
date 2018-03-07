@@ -14,7 +14,7 @@ module.exports = {
             port: 7545,
             network_id: "*" // Match any network id
         },
-        ropsten: {
+        rinkeby: {
             provider: function() {
                 return new HDWalletProvider(process.env.MNEMONIC, process.env.INFURA)
             },
