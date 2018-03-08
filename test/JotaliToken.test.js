@@ -1,5 +1,6 @@
+const expect = require('chai').expect
 const JotaliToken = artifacts.require('./JotaliToken')
-const { assertRevert } = require('./utils')
+const utils = require('./utils')
 
 let totalSupply = null
 let owner = null
