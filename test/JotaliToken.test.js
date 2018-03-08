@@ -8,6 +8,7 @@ let deployed = null
 let account_one = null
 let account_two = null
 let balanceOwner = null
+let balance_two = null
 
 contract('JotaliToken', (accounts) => {
 
@@ -16,9 +17,15 @@ contract('JotaliToken', (accounts) => {
   })
 
   it('owner should own all the supply of tokens', async () => {
-    totalSupply = (await deployed.totalSupply.call()).toNumber()
     owner = accounts[0]
+    totalSupply = (await deployed.totalSupply.call()).toNumber()
     balanceOwner = (await deployed.balanceOf(owner)).toNumber()
     assert.equal(balanceOwner, totalSupply, 'Owner does not own all the tokens')
+  })
+
+  it('second account should not own any tokens', async () => {
+    account_two = accounts[1]
+    balance_two = (await deployed.balanceOf(account_two)).toNumber()
+    assert.equal(balance_two, 0, 'Second account somehow got tokens')
   })
 })
