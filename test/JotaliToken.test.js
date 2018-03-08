@@ -19,6 +19,6 @@ contract('JotaliToken', (accounts) => {
     totalSupply = (await deployed.totalSupply.call()).toNumber()
     owner = accounts[0]
     balanceOwner = (await deployed.balanceOf(owner)).toNumber()
-    assert.equal(balanceOwner, totalSupply, 'Total amount of tokens is owned by owner')
+    assert.equal(balanceOwner, totalSupply, 'Owner does not own all the tokens')
   })
 })
