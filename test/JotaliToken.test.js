@@ -19,10 +19,10 @@ contract('JotaliToken', (accounts) => {
   it('should fail because function does not exist in contract', async () => {
     try {
       await deployed.nonExistentFunction()
-    } catch (e) {
+    } catch (error) {
       return true
     }
-    throw new Error("I should never see this!")
+    throw new Error('I should never see this!')
   })
 
   it('owner should own all the supply of tokens', async () => {

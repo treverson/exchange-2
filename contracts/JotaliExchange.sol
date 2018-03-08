@@ -30,7 +30,7 @@ contract JotaliExchange {
 
       mapping (uint => OrderBook) buyBook;
 
-      uint currentBuyprice;
+      uint currentBuyPrice;
       uint lowestBuyPrice;
       uint amountBuyPrice;
 
@@ -50,17 +50,21 @@ contract JotaliExchange {
 
     mapping (address => uint) balanceEthForAddress;
 
-    // Ether Deposit and Withdrawal
+    // Deposit and Withdraw Ether
     function depositEther() payable {
-
+       require(balanceEthForAddress[msg.sender] + msg.value >= balanceEthForAddress[msg.sender]);
+       balanceEthForAddress[msg.sender] += msg.value;
     }
 
     function withdrawEther(uint amountInWei) {
-
+      require(balanceEthForAddress[msg.sender] - amountInWei >= 0);
+      require(balanceEthForAddress[msg.sender] - amountInWei <= balanceEthForAddress[msg.sender]);
+      balanceEthForAddress[msg.sender] -= amountInWei;
+      msg.sender.transfer(amountInWei);
     }
 
     function getEtherBalanceInWei() constant returns (uint) {
-
+      return balanceEthForAddress[msg.sender];
     }
 
     // Token Management
@@ -99,6 +103,33 @@ contract JotaliExchange {
         if (a[i] != b[i])
           return false;
         return true;
+    }
+
+    // Deposit and Withdraw Token
+    function depositToken(string symboleName, uint amount) {
+      uint symbolNameIndex = getSymbolNameOrThrow(symbolName);
+      require(tokens[symbolNameIndex].tokenContract != address[0]);
+
+      ERC20Interface token = ERC20Interface(tokens[symbolNameIndex].tokenContract);
+
+      require(token.transferFrom(msg.sender, address(this), amount) == true);
+      require(tokenBalanceForAddress[msg.sender][symbolNameIndex] = amount >= tokenBalanceForAddress[msg.sender][symbolNameIndex]);
+      tokenBalanceForAddress[msg.sender][symbolNameIndex] += amount;
+    }
+
+    function withdrawToken(string symbolName, uint amount) {
+      uint8 symbolNameIndex = getSymbolIndexOrThrow(symbolName);
+      require(toekens[symbolNameInde].tokenContract != address(0));
+
+      ERC20Interface token = ERC20Interface(tokens[symbolNameIndex].tokenContract);
+
+      require(tokenBalanceForAddress[msg.sender][symbolNameIndex] - amount >= 0);
+      require(tokenBalanceForAddress[msg.sender]symbolNameIndex) - amount <= tokenBalanceForAddress[msg.sender][symbolNameIndex]
+    }
+
+    function getBalance(string symbolName) constant returns (uint){
+      uint8 symbolNameIndex = getSymbolIndexOrThrow(symbolName);
+      return tokenBalanceForAddress[msg.sender][symbolNameIndex];
     }
 
     // Order Book - Bid Orders
