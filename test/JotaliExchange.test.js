@@ -1,7 +1,7 @@
-const jotaliToken = artifacts.require('./JotaliToken.sol')
+const jotaliToken = artifacts.require('./JotaliExchange')
 const { assertRevert } = require('./utils')
 
-contract('JotaliToken', (accounts) => {
+contract('JotaliExchange', (accounts) => {
   it('it shoud work', () => {
     console.log('There better be some tests niccah!')
   })
