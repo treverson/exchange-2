@@ -1,4 +1,3 @@
-const expect = require('chai').expect
 const JotaliToken = artifacts.require('./JotaliToken')
 const { assertRevert } = require('./utils')
 
@@ -18,7 +17,7 @@ contract('JotaliToken', (accounts) => {
 
   it('should fail because function does not exist in contract', async () => {
     try {
-      await cbc.nonExistentFunction()
+      await deployed.nonExistentFunction()
     } catch (e) {
       return true
     }
