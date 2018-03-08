@@ -16,6 +16,15 @@ contract('JotaliToken', (accounts) => {
     deployed = await JotaliToken.deployed()
   })
 
+  it('should fail because function does not exist in contract', async () => {
+    try {
+      await cbc.nonExistentFunction()
+    } catch (e) {
+      return true
+    }
+    throw new Error("I should never see this!")
+  })
+
   it('owner should own all the supply of tokens', async () => {
     owner = accounts[0]
     totalSupply = (await deployed.totalSupply.call()).toNumber()
@@ -28,4 +37,5 @@ contract('JotaliToken', (accounts) => {
     balance_two = (await deployed.balanceOf(account_two)).toNumber()
     assert.equal(balance_two, 0, 'Second account somehow got tokens')
   })
+
 })
