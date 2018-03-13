@@ -185,7 +185,7 @@ contract JotaliExchange {
     }
 
     // Bid Limit order Logic
-    function addBuyoffer(uint8 tokenIndex, uint priceInWei, uint amount, address who) internal {
+    function addBuyOffer(uint8 tokenIndex, uint priceInWei, uint amount, address who) internal {
       tokens[tokenIndex].buyBook[priceInWei].offers_length++;
       tokens[tokenIndex].buyBook[priceInWei].offers[tokensIndex].buyBook[priceInWei].offer_length] = Offer(amount, who);
 
@@ -216,7 +216,7 @@ contract JotaliExchange {
         }
       }
       else {
-        uint buyPrice = toekn[tokenIndex].currentBuyPrice;
+        uint buyPrice = token[tokenIndex].currentBuyPrice;
         bool weFoundIt = false;
         while (buyPrice > 0 && !weFoundIt) {
           if (
@@ -234,7 +234,6 @@ contract JotaliExchange {
           buyPrice = tokens[tokenIndex].buyBook[buyPrice].lowerPrice;
         }
       }
-
     }
 
     // Ask Limit Order Logic
@@ -249,6 +248,7 @@ contract JotaliExchange {
     // Cancel Limit Order Logic
     function cancelOrder(string symbolName, bool isSellOrder, uint priceInWei, uint offerKey) {
       uint symbolNameIndex = getSymbolIndexOrThrow(symbolName);
+
       if (isSellOrder) {
         require(tokens[symbolNameIndex].sellBook[priceInWei].offers[offerKey].who = msg.sender);
 
