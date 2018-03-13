@@ -58,7 +58,7 @@ contract JotaliExchange {
 
     // Events for Orders
     event LimitSellOrderCreated(uint indexed _symbolIndex, address indexed _who, uint _amountTokens, uint _priceInWei, uint _orderKey);
-    event SellOrderFulfilled(uint indexed _symbolIndex, uint _amount, uing _priceInWei, uint _orderKey);
+    event SellOrderFulfilled(uint indexed _symbolIndex, uint _amount, uint _priceInWei, uint _orderKey);
     event SellOrderCanceled(uint indexed _symbolIndex, uint _priceInWei, uint _orderkey);
     event LimitBuyOrderCreated(uint indexed _symbolIndex, address indexed _who, uint _amountTokens, uint _priceWei, uint _orderKey);
     event BuyOrderFulfilled(uint indexed _symbolindex, uint _amoutn, uint _priceInWei, uint _orderKey);
@@ -97,7 +97,7 @@ contract JotaliExchange {
     }
 
     function hasToken(string symbolName) constant returns (bool) {
-      uint8 index = getSymbolIndex(symbolName);=
+      uint8 index = getSymbolIndex(symbolName);
       if (index == 0) {
         return false;
       }
@@ -132,11 +132,11 @@ contract JotaliExchange {
       DepositForTokenReceived(msg.sender, symbolNameIndex, amount, now);
     }
 
-    function withdrawToken(string symbolName, uint amount {
+    function withdrawToken(string symbolName, uint amount) {
       uint symbolNameIndex = getSymbolIndexOrThrow(symbolName);
       require(tokens[symbolNameIndex].tokenContract != address(0));
 
-      ERC20Interface token = ERC20Interface(tokens[symbolNameIndex].tokenContract;
+      ERC20Interface token = ERC20Interface(tokens[symbolNameIndex].tokenContract);
 
       require(tokenBalanceAddress[msg.sender][symbolNameIndex] - amount >= 0);
       require(tokenBalanceForAddress[msg.sender][symbolNameIndex] - amount <= tokenBalanceForAddress[msg.sender][symbolNameIndex]);
@@ -146,7 +146,7 @@ contract JotaliExchange {
       WithdrawalToken(msg.sender, symbolNameIndex, amount, now);
     }
 
-    function getBalance(string symbolName) contant returns (uint) {
+    function getBalance(string symbolName) constant returns (uint) {
       uint8 symbolNameIndex = getSymbolIndexOrThrow(symbolName);
       return tokenBalanceForAddress[msg.sender][symbolNameIndex];
     }
@@ -169,7 +169,7 @@ contract JotaliExchange {
 
       total_amount_ether_necessary = amount * priceInWei;
 
-      require(total_amount_ether_necessary >= amount;
+      require(total_amount_ether_necessary >= amount);
       require(total_amount_ether_necessary >= priceInWei);
       require(balanceEthForAddress[msg.sender] >= total_amount_ether_necessary);
       require(balanceEthForAddress[msg.sender] - total_amount_ether_necessary >= 0);
@@ -187,10 +187,10 @@ contract JotaliExchange {
     // Bid Limit order Logic
     function addBuyOffer(uint8 tokenIndex, uint priceInWei, uint amount, address who) internal {
       tokens[tokenIndex].buyBook[priceInWei].offers_length++;
-      tokens[tokenIndex].buyBook[priceInWei].offers[tokensIndex].buyBook[priceInWei].offer_length] = Offer(amount, who);
+      tokens[tokenIndex].buyBook[priceInWei].offers[tokensIndex].buyBook[priceInWei].offer_length = Offer(amount, who);
 
       if (tokens[tokenIndex].buyBook[priceInWei].offer_length == 1) {
-        tokens[tokenIndex.buyBook[priceInWei].offers_key = 1;
+        tokens[tokenIndex].buyBook[priceInWei].offers_key = 1;
         tokens[tokenIndex].amountBuyPrices++;
 
         uint currentBuyPrice = tokens[tokenIndex].currentBuyPrice ;
@@ -201,7 +201,7 @@ contract JotaliExchange {
             tokens[tokenIndex].currentBuyprice = priceInWei;
             tokens[tokenIndex].buyBook[priceInWei].higherPrice = priceInWei;
             tokens[tokenIndex].buyBook[priceInWei].lowerPrice = 0;
-          } esle {
+          } else {
             tokens[tokenIndex].buyBook[lowestBuyPrice].lowerPrice = priceInWei;
             tokens[tokenIndex].buyBook[priceInWei].higherPrice = lowestBuyPrice;
             tokens[tokenIndex].buyBook[priceInWei].lowerPrice = 0;
