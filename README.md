@@ -1,5 +1,5 @@
 ## Jotali Decentralized Exchange on Ethereum
-+ This app powers [https://exchange.jotali.co](https://exchange.jotali.co)
++ This app powers [https://www.jotali.co](https://www.jotali.co)
 
 ## Getting Started
 # Software requirements
