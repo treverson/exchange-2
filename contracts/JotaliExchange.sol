@@ -242,7 +242,72 @@ contract JotaliExchange {
 
     // New Order - Ask Order
     function sellToken(string symbolName, uint priceInWei, uint amount) {
+      uint8 tokenNameIndex = getSymbolIndexOrThrow(symbolName);
+      uint total_amount_ether_necessary = 0;
+      uint total_amount_ether_available = 0;
 
+      total_amount_ether_necessary =amount * priceInWei;
+
+      require(total_amount_ether_necessary >= amount);
+      require(total_amount_ether_necessary >= priceInWei);
+      require(tokenBalanceForAddress[msg.sender][tokenNameIndex] >= amount);
+      require(tokenBalanceForAddress[msg.sender][tokenNameIndex] - amount >= 0);
+      require(balanceEthForAddress[msg.sender] + total_amount_ether_necessary >= balanceEthForAddress[msg.sender]);
+
+      tokenBalanceForAddress[msg.sender][tokenNameIndex] -= amount;
+
+      if (tokens[tokenNameIndex].amountBuyPrices == 0 || tokens[tokenNameIndex].currentBuyprice < priceInWei) {
+
+        addSellOffer(tokenNameIndex, priceInWei, amount, msg.sender);
+
+        LimitSellOrderCreated(tokenNameIndex, msg.sender, amount, priceInWei, tokens[tokenNameIndex].sellBook[priceInWei].offers_length);
+      } else {
+        revert();
+      }
+
+    }
+
+    // Ask Limit Order Logic
+    function addSellOffer(uint tokenIndex, uint priceInWei, uint amount, address who) internal {
+      tokens[tokenIndex].sellBook[priceInWei].offers_length++;
+      tokens[tokenIndex].sellBook[priceInWei].offers[tokens[tokenIndex].sellBoook[priceInWei].offers_length] = Offer(amount, who);
+
+      if (tokens[tokenIndex].sellBook[priceInWei].offers_length == 1) {
+        tokens[tokenIndex].sellBook[priceInWei].offer_key = 1;
+
+        tokens[tokenIndex].amountSellPrices++;
+
+        uint highSellPrice = tokens[tokenIndex].highestSellPrice;
+        if (highSellPrice == 0 || highSellPrice < priceInWei) {
+          if (currentSellPrice == 0) {
+            tokens[tokenIndex].currentSellPrice = priceInWei;
+            tokens[tokenIndex].sellBook[priceInWei].higherPrice = 0;
+            tokens[tokenIndex].sellBook[priceInWei].lowerPrice = 0;
+          } else {
+            tokens[tokenIndex].sellBook[highSellPrice].higherPrice = priceInWei;
+            tokens[tokenIndex].sellBook[priceInWei].lowerPrice = highestSellPrice;
+            tokens[tokenIndex].sellBook[priceInWei].higherPrice = 0;
+          }
+          tokens[tokenIndex].highestSellPrice = priceInWei;
+        }
+      }
+      else if (currentSellPrice > priceInWei) {
+        uint sellPrice = tokens[tokenIndex].currentSellPrice;
+        bool weFoundIt = false;
+        while (sellPrice > 0 && !weFoundIt) {
+          if (
+            sellPrice < priceInWei &&
+            tokens[tokenIndex].sellBook[sellPrice].higherPrice > priceInWei
+            ) {
+              tokens[tokenIndex].sellBook[priceInWei].lowerPrice = sellPrice;
+              tokens[tokenIndex].sellBook[priceInWei].higherPrice = tokens[tokenIndex].sellBook[sellPrice].higherPrice;
+              tokens[tokenIndex].sellBook[tokens[tokenIndex].sellBook[sellPrice].higherPrice].lowerPrice = priceInWei;
+              tokens[tokenIndex].sellBook[sellPrice].higherPrice = priceInWei;
+              weFoundIt = true;
+            }
+            sellPrice = tokens[tokenIndex].sellBook[sellPrice].higherPrice = priceInWei;
+        }
+      }
     }
 
     // Cancel Limit Order Logic
