@@ -50,17 +50,40 @@ contract JotaliExchange {
 
     mapping (address => uint) balanceEthForAddress;
 
+    // Events for Deposit/Withdrawal
+    event DepositForTokenReceived(address indexed _from, uint indexed _symbolIndex, uint _amount, uint _timestamp);
+    event WithdrawalToken(address indexed _to, uint indexed _symbolIndex, uint _amount, uint _timestamp );
+    event DepositForEthReceived(address indexed _from, uint _amount, uint _timestamp);
+    event WithdrawalEth(address indexed _to, uint _amount, uint _timestamp);
+
+    // Events for Orders
+    event LimitSellOrderCreated(uint indexed _symbolIndex, address indexed _who, uint _amountTokens, uint _priceInWei, uint _orderKey);
+    event SellOrderFulfilled(uint indexed _symbolIndex, uint _amount, uing _priceInWei, uint _orderKey);
+    event SellOrderCanceled(uint indexed _symbolIndex, uint _priceInWei, uint _orderkey);
+    event LimitBuyOrderCreated(uint indexed _symbolIndex, address indexed _who, uint _amountTokens, uint _priceWei, uint _orderKey);
+    event BuyOrderFulfilled(uint indexed _symbolindex, uint _amoutn, uint _priceInWei, uint _orderKey);
+    event BuyOrderCanceled(uint indexed _symbolIndex, uint _priceInWei, uint _orderKey);
+
+    // Events for Management
+    event TokenAddedToSystem(uint _symbolIndex, string _token, uint _timestamp);
+
     // Ether Deposit and Withdrawal
     function depositEther() payable {
-
+      require(balanceEthForAddress[msg.sender] + msg.value >= balanceEthForAddress[msg.sender]);
+      balanceEthForAddress[msg.sender] += msg.value;
+      DepositForEthReceived(msg.sender, msg.value, now);
     }
 
     function withdrawEther(uint amountInWei) {
-
+      require(balanceEthForAddress[msg.sender] - amountInWei >= 0);
+      require(balanceEthForAddress[msg.sender] - amountInWei <= balanceEthForAddress[msg.sender]);
+      balanceEthForAddress[msg.sender] -= amountInWei;
+      msg.sender.transfer(amountInWei);
+      WithdrawalEth(msg.sender, amountInWei, now);
     }
 
     function getEtherBalanceInWei() constant returns (uint) {
-
+      return balanceEthForAddress[msg.sender];
     }
 
     // Token Management
