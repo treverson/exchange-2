@@ -92,10 +92,12 @@ contract JotaliExchange {
       symbolNameIndex++;
       tokens[symbolNameIndex].symbolName = symbolName;
       tokens[symbolNameIndex].tokenContract = erc20TokenAddress;
+      TokenAddedToSystem(symbolNameIndex, symbolName, now);
+
     }
 
     function hasToken(string symbolName) constant returns (bool) {
-      uint8 index = getSymbolIndex(symbolName);
+      uint8 index = getSymbolIndex(symbolName);=
       if (index == 0) {
         return false;
       }
@@ -109,6 +111,44 @@ contract JotaliExchange {
         }
       }
       return 0;
+    }
+
+    function getSymbolIndexOrThrow(string symbolName) returns (uint8) {
+      uint8 index = getSymbolIndex(symbolName);
+      require(index > 0);
+      return index;
+    }
+
+    // Deposit and Withdraw Token
+    function depositToken(string symbolName, uint amount) {
+      uint8 symbolNameIndex = getSymbolIndexOrThrow(symbolName);
+      require(tokens[symbolNameIndex].tokenContract != address(0));
+
+      ERC20Interface token = ERC20Interface(tokens[symbolNameIndex].tokenContract);
+
+      require(token.transferFrom(msg.sender, address(this), amount) == true);
+      require(tokenBalanceForAddress[msg.sender][symbolNameIndex] + amount >= tokenBalanceForAddress[msg.sender][symbolNameIndex]);
+      tokenBalanceForAddress[msg.sender][symbolNameIndex] += amount;
+      DepositForTokenReceived(msg.sender, symbolNameIndex, amount, now);
+    }
+
+    function withdrawToken(string symbolName, uint amount {
+      uint symbolNameIndex = getSymbolIndexOrThrow(symbolName);
+      require(tokens[symbolNameIndex].tokenContract != address(0));
+
+      ERC20Interface token = ERC20Interface(tokens[symbolNameIndex].tokenContract;
+
+      require(tokenBalanceAddress[msg.sender][symbolNameIndex] - amount >= 0);
+      require(tokenBalanceForAddress[msg.sender][symbolNameIndex] - amount <= tokenBalanceForAddress[msg.sender][symbolNameIndex]);
+
+      tokenBalanceForAddress[msg.sender][symbolNameIndex] -= amount;
+      require(token.transfer(msg.sender, amount) == true);
+      WithdrawalToken(msg.sender, symbolNameIndex, amount, now);
+    }
+
+    function getBalance(string symbolName) contant returns (uint) {
+      uint8 symbolNameIndex = getSymbolIndexOrThrow(symbolName);
+      return tokenBalanceForAddress[msg.sender][symbolNameIndex];
     }
 
     // String Comparison Function
