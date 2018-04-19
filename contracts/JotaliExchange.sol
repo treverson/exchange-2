@@ -4,7 +4,7 @@ import "./JotaliToken.sol";
 
 contract JotaliExchange {
 
-  function JotaliExchange() {
+  function constructor() {
   }
 
   struct Offer {
@@ -28,7 +28,7 @@ contract JotaliExchange {
 
     mapping (uint => OrderBook) buyBook;
 
-    uint currentBuyprice;
+    uint currentBuyPrice;
     uint lowestBuyPrice;
     uint amountBuyPrices;
 
@@ -115,7 +115,7 @@ contract JotaliExchange {
   }
 
   function depositToken(string symbolName, uint amount) {
-    uint8 symbolNameIndex = getSymbolIndexOrThrow(symbolName);
+    symbolNameIndex = getSymbolIndexOrThrow(symbolName);
     require(tokens[symbolNameIndex].tokenContract != address(0));
 
     ERC20Interface token = ERC20Interface(tokens[symbolNameIndex].tokenContract);
@@ -128,12 +128,12 @@ contract JotaliExchange {
   }
 
   function withdrawToken(string symbolName, uint amount) {
-    uint symbolNameIndex = getSymbolIndexOrThrow(symbolName);
+    symbolNameIndex = getSymbolIndexOrThrow(symbolName);
     require(tokens[symbolNameIndex].tokenContract != address(0));
 
     ERC20Interface token = ERC20Interface(tokens[symbolNameIndex].tokenContract);
 
-    require(tokenBalanceAddress[msg.sender][symbolNameIndex] - amount >= 0);
+    require(tokenBalanceForAddress[msg.sender][symbolNameIndex] - amount >= 0);
     require(tokenBalanceForAddress[msg.sender][symbolNameIndex] - amount <= tokenBalanceForAddress[msg.sender][symbolNameIndex]);
 
     tokenBalanceForAddress[msg.sender][symbolNameIndex] -= amount;
@@ -142,7 +142,7 @@ contract JotaliExchange {
   }
 
   function getBalance(string symbolName) constant returns (uint) {
-    uint8 symbolNameIndex = getSymbolIndexOrThrow(symbolName);
+    symbolNameIndex = getSymbolIndexOrThrow(symbolName);
     return tokenBalanceForAddress[msg.sender][symbolNameIndex];
   }
 
@@ -155,7 +155,7 @@ contract JotaliExchange {
   }
 
   function buyToken(string symbolName, uint priceInWei, uint amount) {
-    uint8 tokenNameindex = getSymbolIndexOrThrow(symbolName);
+    uint8 tokenNameIndex = getSymbolIndexOrThrow(symbolName);
     uint total_amount_ether_necessary = 0;
     uint total_amount_ether_available = 0;
 
@@ -168,9 +168,9 @@ contract JotaliExchange {
 
     balanceEthForAddress[msg.sender] -= total_amount_ether_necessary;
 
-    if (tokens[tokenNameindex].amountSellPrices  == 0 || tokens[tokensNameindex].currentSellprice > priceInWei) {
-      addBuyOffer(tokenNameindex, priceInWei, amount, msg.sender);
-      emit LimitBuyOrderCreated(tokenNameindex, msg.sender, amount, priceInWei, tokens[tokenNameindex].buyBook[priceInWei].offers_length);
+    if (tokens[tokenNameIndex].amountSellPrices  == 0 || tokens[tokenNameIndex].currentSellPrice > priceInWei) {
+      addBuyOffer(tokenNameIndex, priceInWei, amount, msg.sender);
+      emit LimitBuyOrderCreated(tokenNameIndex, msg.sender, amount, priceInWei, tokens[tokenNameIndex].buyBook[priceInWei].offers_length);
     } else {
       revert();
     }
@@ -178,18 +178,18 @@ contract JotaliExchange {
 
   function addBuyOffer(uint8 tokenIndex, uint priceInWei, uint amount, address who) internal {
     tokens[tokenIndex].buyBook[priceInWei].offers_length++;
-    tokens[tokenIndex].buyBook[priceInWei].offers[tokensIndex].buyBook[priceInWei].offer_length = Offer(amount, who);
+    tokens[tokenIndex].buyBook[priceInWei].offers[tokens[tokenIndex].buyBook[priceInWei].offers_length] = Offer(amount, who);
 
-    if (tokens[tokenIndex].buyBook[priceInWei].offer_length == 1) {
+    if (tokens[tokenIndex].buyBook[priceInWei].offers_length == 1) {
       tokens[tokenIndex].buyBook[priceInWei].offers_key = 1;
       tokens[tokenIndex].amountBuyPrices++;
 
-      uint currentBuyPrice = tokens[tokenIndex].currentBuyPrice ;
+      uint currentBuyPrice = tokens[tokenIndex].currentBuyPrice;
 
       uint lowestBuyPrice = tokens[tokenIndex].lowestBuyPrice;
       if (lowestBuyPrice == 0 || lowestBuyPrice > priceInWei) {
         if (currentBuyPrice == 0) {
-          tokens[tokenIndex].currentBuyprice = priceInWei;
+          tokens[tokenIndex].currentBuyPrice = priceInWei;
           tokens[tokenIndex].buyBook[priceInWei].higherPrice = priceInWei;
           tokens[tokenIndex].buyBook[priceInWei].lowerPrice = 0;
         } else {
@@ -197,17 +197,17 @@ contract JotaliExchange {
           tokens[tokenIndex].buyBook[priceInWei].higherPrice = lowestBuyPrice;
           tokens[tokenIndex].buyBook[priceInWei].lowerPrice = 0;
         }
-        tokens[tokenindex].lowestBuyPrice = priceInWei;
+        tokens[tokenIndex].lowestBuyPrice = priceInWei;
       }
       else if (currentBuyPrice < priceInWei) {
         tokens[tokenIndex].buyBook[currentBuyPrice].higherPrice = priceInWei;
         tokens[tokenIndex].buyBook[priceInWei].higherPrice = priceInWei;
         tokens[tokenIndex].buyBook[priceInWei].lowerPrice = currentBuyPrice;
-        tokens[tokenIndex].currentBuyprice = priceInWei;
+        tokens[tokenIndex].currentBuyPrice = priceInWei;
       }
     }
     else {
-      uint buyPrice = token[tokenIndex].currentBuyPrice;
+      uint buyPrice = tokens[tokenIndex].currentBuyPrice;
       bool weFoundIt = false;
       while (buyPrice > 0 && !weFoundIt) {
         if (
@@ -242,7 +242,7 @@ contract JotaliExchange {
 
     tokenBalanceForAddress[msg.sender][tokenNameIndex] -= amount;
 
-    if (tokens[tokenNameIndex].amountBuyPrices == 0 || tokens[tokenNameIndex].currentBuyprice < priceInWei) {
+    if (tokens[tokenNameIndex].amountBuyPrices == 0 || tokens[tokenNameIndex].currentBuyPrice < priceInWei) {
 
       addSellOffer(tokenNameIndex, priceInWei, amount, msg.sender);
 
@@ -253,30 +253,30 @@ contract JotaliExchange {
 
   }
 
-  function addSellOffer(uint tokenIndex, uint priceInWei, uint amount, address who) internal {
+  function addSellOffer(uint8 tokenIndex, uint priceInWei, uint amount, address who) internal {
     tokens[tokenIndex].sellBook[priceInWei].offers_length++;
-    tokens[tokenIndex].sellBook[priceInWei].offers[tokens[tokenIndex].sellBoook[priceInWei].offers_length] = Offer(amount, who);
+    tokens[tokenIndex].sellBook[priceInWei].offers[tokens[tokenIndex].sellBook[priceInWei].offers_length] = Offer(amount, who);
 
     if (tokens[tokenIndex].sellBook[priceInWei].offers_length == 1) {
-      tokens[tokenIndex].sellBook[priceInWei].offer_key = 1;
+      tokens[tokenIndex].sellBook[priceInWei].offers_key = 1;
 
       tokens[tokenIndex].amountSellPrices++;
 
       uint highSellPrice = tokens[tokenIndex].highestSellPrice;
       if (highSellPrice == 0 || highSellPrice < priceInWei) {
-        if (currentSellPrice == 0) {
+        if (tokens[tokenIndex].currentSellPrice == 0) {
           tokens[tokenIndex].currentSellPrice = priceInWei;
           tokens[tokenIndex].sellBook[priceInWei].higherPrice = 0;
           tokens[tokenIndex].sellBook[priceInWei].lowerPrice = 0;
         } else {
           tokens[tokenIndex].sellBook[highSellPrice].higherPrice = priceInWei;
-          tokens[tokenIndex].sellBook[priceInWei].lowerPrice = highestSellPrice;
+          tokens[tokenIndex].sellBook[priceInWei].lowerPrice = tokens[tokenIndex].highestSellPrice;
           tokens[tokenIndex].sellBook[priceInWei].higherPrice = 0;
         }
         tokens[tokenIndex].highestSellPrice = priceInWei;
       }
     }
-    else if (currentSellPrice > priceInWei) {
+    else if (tokens[tokenIndex].currentSellPrice > priceInWei) {
       uint sellPrice = tokens[tokenIndex].currentSellPrice;
       bool weFoundIt = false;
       while (sellPrice > 0 && !weFoundIt) {
@@ -296,10 +296,10 @@ contract JotaliExchange {
   }
 
   function cancelOrder(string symbolName, bool isSellOrder, uint priceInWei, uint offerKey) {
-    uint symbolNameIndex = getSymbolIndexOrThrow(symbolName);
+    symbolNameIndex = getSymbolIndexOrThrow(symbolName);
 
     if (isSellOrder) {
-      require(tokens[symbolNameIndex].sellBook[priceInWei].offers[offerKey].who = msg.sender);
+      require(tokens[symbolNameIndex].sellBook[priceInWei].offers[offerKey].who == msg.sender);
 
       uint tokensAmount = tokens[symbolNameIndex].sellBook[priceInWei].offers[offerKey].amount;
       require(tokenBalanceForAddress[msg.sender][symbolNameIndex] + tokensAmount >= tokenBalanceForAddress[msg.sender][symbolNameIndex]);
