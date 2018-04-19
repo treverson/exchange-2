@@ -4,7 +4,7 @@ import "zeppelin-solidity/contracts/math/SafeMath.sol";
 import 'zeppelin-solidity/contracts/ownership/Ownable.sol';
 import "zeppelin-solidity/contracts/token/ERC20/StandardToken.sol";
 
-contract JotaliToken is Ownable, StandardToken {
+contract JotaliToken is Ownable, ERC20Interface, StandardToken {
   using SafeMath for uint256;
 
   string public constant name = "JTL Token";
