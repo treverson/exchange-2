@@ -7,7 +7,6 @@ contract JotaliExchange {
   function JotaliExchange() {
   }
 
-  // General Structure
   struct Offer {
     uint amount;
     address who;
@@ -44,18 +43,15 @@ contract JotaliExchange {
   mapping (uint8 => Token) tokens;
   uint8 symbolNameIndex;
 
-  // Balances
   mapping (address => mapping (uint8 => uint)) tokenBalanceForAddress;
 
   mapping (address => uint) balanceEthForAddress;
 
-  // Events for Deposit/Withdrawal
   event DepositForTokenReceived(address indexed _from, uint indexed _symbolIndex, uint _amount, uint _timestamp);
   event WithdrawalToken(address indexed _to, uint indexed _symbolIndex, uint _amount, uint _timestamp );
   event DepositForEthReceived(address indexed _from, uint _amount, uint _timestamp);
   event WithdrawalEth(address indexed _to, uint _amount, uint _timestamp);
 
-  // Events for Orders
   event LimitSellOrderCreated(uint indexed _symbolIndex, address indexed _who, uint _amountTokens, uint _priceInWei, uint _orderKey);
   event SellOrderFulfilled(uint indexed _symbolIndex, uint _amount, uint _priceInWei, uint _orderKey);
   event SellOrderCanceled(uint indexed _symbolIndex, uint _priceInWei, uint _orderkey);
@@ -63,10 +59,8 @@ contract JotaliExchange {
   event BuyOrderFulfilled(uint indexed _symbolindex, uint _amoutn, uint _priceInWei, uint _orderKey);
   event BuyOrderCanceled(uint indexed _symbolIndex, uint _priceInWei, uint _orderKey);
 
-  // Events for Management
   event TokenAddedToSystem(uint _symbolIndex, string _token, uint _timestamp);
 
-  // Ether Deposit and Withdrawal
   function depositEther() payable {
     require(balanceEthForAddress[msg.sender] + msg.value >= balanceEthForAddress[msg.sender]);
 
@@ -87,7 +81,6 @@ contract JotaliExchange {
     return balanceEthForAddress[msg.sender];
   }
 
-  // Token Management
   function addToken(string symbolName, address erc20TokenAddress) {
     require(!hasToken(symbolName));
 
@@ -121,7 +114,6 @@ contract JotaliExchange {
     return index;
   }
 
-  // Deposit and Withdraw Token
   function depositToken(string symbolName, uint amount) {
     uint8 symbolNameIndex = getSymbolIndexOrThrow(symbolName);
     require(tokens[symbolNameIndex].tokenContract != address(0));
@@ -154,17 +146,14 @@ contract JotaliExchange {
     return tokenBalanceForAddress[msg.sender][symbolNameIndex];
   }
 
-  // Order Book - Bid Orders
   function getBuyOrderBook(string symbolName) constant returns (uint[], uint[]) {
 
   }
 
-  // Order Book - Ask Orders
   function getSellOrderBook(string symbolName) constant returns (uint[], uint[]) {
 
   }
 
-  // New Order - Bid Order
   function buyToken(string symbolName, uint priceInWei, uint amount) {
     uint8 tokenNameindex = getSymbolIndexOrThrow(symbolName);
     uint total_amount_ether_necessary = 0;
@@ -187,7 +176,6 @@ contract JotaliExchange {
     }
   }
 
-  // Bid Limit order Logic
   function addBuyOffer(uint8 tokenIndex, uint priceInWei, uint amount, address who) internal {
     tokens[tokenIndex].buyBook[priceInWei].offers_length++;
     tokens[tokenIndex].buyBook[priceInWei].offers[tokensIndex].buyBook[priceInWei].offer_length = Offer(amount, who);
@@ -239,9 +227,6 @@ contract JotaliExchange {
     }
   }
 
-  // Ask Limit Order Logic
-
-  // New Order - Ask Order
   function sellToken(string symbolName, uint priceInWei, uint amount) {
     uint8 tokenNameIndex = getSymbolIndexOrThrow(symbolName);
     uint total_amount_ether_necessary = 0;
@@ -268,7 +253,6 @@ contract JotaliExchange {
 
   }
 
-  // Ask Limit Order Logic
   function addSellOffer(uint tokenIndex, uint priceInWei, uint amount, address who) internal {
     tokens[tokenIndex].sellBook[priceInWei].offers_length++;
     tokens[tokenIndex].sellBook[priceInWei].offers[tokens[tokenIndex].sellBoook[priceInWei].offers_length] = Offer(amount, who);
@@ -311,7 +295,6 @@ contract JotaliExchange {
     }
   }
 
-  // Cancel Limit Order Logic
   function cancelOrder(string symbolName, bool isSellOrder, uint priceInWei, uint offerKey) {
     uint symbolNameIndex = getSymbolIndexOrThrow(symbolName);
 
