@@ -1,4 +1,4 @@
-pragma solidity ^0.4.19;
+pragma solidity ^0.4.21;
 
 import "./JotaliToken.sol";
 
@@ -71,7 +71,7 @@ contract JotaliExchange {
     require(balanceEthForAddress[msg.sender] + msg.value >= balanceEthForAddress[msg.sender]);
 
     balanceEthForAddress[msg.sender] += msg.value;
-    DepositForEthReceived(msg.sender, msg.value, now);
+    emit DepositForEthReceived(msg.sender, msg.value, now);
   }
 
   function withdrawEther(uint amountInWei) {
@@ -80,7 +80,7 @@ contract JotaliExchange {
 
     balanceEthForAddress[msg.sender] -= amountInWei;
     msg.sender.transfer(amountInWei);
-    WithdrawalEth(msg.sender, amountInWei, now);
+    emit WithdrawalEth(msg.sender, amountInWei, now);
   }
 
   function getEtherBalanceInWei() constant returns (uint) {
@@ -94,7 +94,7 @@ contract JotaliExchange {
     symbolNameIndex++;
     tokens[symbolNameIndex].symbolName = symbolName;
     tokens[symbolNameIndex].tokenContract = erc20TokenAddress;
-    TokenAddedToSystem(symbolNameIndex, symbolName, now);
+    emit TokenAddedToSystem(symbolNameIndex, symbolName, now);
 
   }
 
@@ -132,7 +132,7 @@ contract JotaliExchange {
     require(tokenBalanceForAddress[msg.sender][symbolNameIndex] + amount >= tokenBalanceForAddress[msg.sender][symbolNameIndex]);
 
     tokenBalanceForAddress[msg.sender][symbolNameIndex] += amount;
-    DepositForTokenReceived(msg.sender, symbolNameIndex, amount, now);
+    emit DepositForTokenReceived(msg.sender, symbolNameIndex, amount, now);
   }
 
   function withdrawToken(string symbolName, uint amount) {
@@ -146,7 +146,7 @@ contract JotaliExchange {
 
     tokenBalanceForAddress[msg.sender][symbolNameIndex] -= amount;
     require(token.transfer(msg.sender, amount) == true);
-    WithdrawalToken(msg.sender, symbolNameIndex, amount, now);
+    emit WithdrawalToken(msg.sender, symbolNameIndex, amount, now);
   }
 
   function getBalance(string symbolName) constant returns (uint) {
@@ -181,7 +181,7 @@ contract JotaliExchange {
 
     if (tokens[tokenNameindex].amountSellPrices  == 0 || tokens[tokensNameindex].currentSellprice > priceInWei) {
       addBuyOffer(tokenNameindex, priceInWei, amount, msg.sender);
-      LimitBuyOrderCreated(tokenNameindex, msg.sender, amount, priceInWei, tokens[tokenNameindex].buyBook[priceInWei].offers_length);
+      emit LimitBuyOrderCreated(tokenNameindex, msg.sender, amount, priceInWei, tokens[tokenNameindex].buyBook[priceInWei].offers_length);
     } else {
       revert();
     }
@@ -261,7 +261,7 @@ contract JotaliExchange {
 
       addSellOffer(tokenNameIndex, priceInWei, amount, msg.sender);
 
-      LimitSellOrderCreated(tokenNameIndex, msg.sender, amount, priceInWei, tokens[tokenNameIndex].sellBook[priceInWei].offers_length);
+      emit LimitSellOrderCreated(tokenNameIndex, msg.sender, amount, priceInWei, tokens[tokenNameIndex].sellBook[priceInWei].offers_length);
     } else {
       revert();
     }
@@ -323,7 +323,7 @@ contract JotaliExchange {
 
       tokenBalanceForAddress[msg.sender][symbolNameIndex] += tokensAmount;
       tokens[symbolNameIndex].sellBook[priceInWei].offers[offerKey].amount = 0;
-      SellOrderCanceled(symbolNameIndex, priceInWei, offerKey);
+      emit SellOrderCanceled(symbolNameIndex, priceInWei, offerKey);
     }
     else {
       require(tokens[symbolNameIndex].buyBook[priceInWei].offers[offerKey].who == msg.sender);
